@@ -12,7 +12,7 @@ const tools = {
   getWeatherDetails: async (city) => {
     try {
       const url = `http://api.weatherstack.com/current?access_key=${WEATHER_API_KEY}&query=${city}`;
-      console.log(url);
+      // console.log(url);
       const response = await axios.get(url);
       const temp = await response.data.current.temperature; // ✅ Corrected destructuring
       const description = await response.data.current.weather_descriptions[0];
@@ -62,8 +62,15 @@ Strictly return responses in the following JSON format:
 const messages = [{ role: "system", content: SYSTEM_PROMPT }];
 
 async function chatLoop() {
+  const username = process.env.REPL_OWNER || "there";
+  let isFirstTime = true;
+
   while (true) {
-    const query = readlineSync.question(">> ");
+    const greeting = isFirstTime
+      ? `>> Hey ${username}, how are you? Do you want to know the weather of any location?\n>> `
+      : ">> ";
+    const query = readlineSync.question(greeting);
+    isFirstTime = false;
     if (query.toLowerCase() === "exit") break;
 
     messages.push({
@@ -93,7 +100,7 @@ async function chatLoop() {
 
       for (const jsonStr of jsonStrings) {
         try {
-          console.log("Parsing JSON:", jsonStr);
+          // console.log("Parsing JSON:", jsonStr);
           const parsedResponse = JSON.parse(jsonStr);
 
           if (!["action", "output"].includes(parsedResponse.type)) {
@@ -123,7 +130,7 @@ async function chatLoop() {
               content: JSON.stringify({ type: "observation", observation }),
             });
 
-            console.log(` Observation is 🤖: ${observation}`);
+            console.log(` As per my Observation, it is 🤖: ${observation}`);
             break;
           }
         } catch (error) {
