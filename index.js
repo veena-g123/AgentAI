@@ -12,7 +12,6 @@ const tools = {
   getWeatherDetails: async (city) => {
     try {
       const url = `http://api.weatherstack.com/current?access_key=${WEATHER_API_KEY}&query=${city}`;
-      // console.log(url);
       const response = await axios.get(url);
       const temp = await response.data.current.temperature; // ✅ Corrected destructuring
       const description = await response.data.current.weather_descriptions[0];
